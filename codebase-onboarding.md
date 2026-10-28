@@ -74,14 +74,14 @@ npm run deploy
 
 ## Adding a tool
 
-Create one file in `src/tools`, define the tool with the SDK's native `registerTool` method, and add it to `src/tools/index.ts`.
+Create a folder under `src/tools` with a `tool.ts` definition and an `index.ts` barrel exporting the tool. Add it to `src/tools/index.ts`. Context-only tools keep their Markdown in `content.md` beside `tool.ts`. API tools keep each Effect step and its error in a separate file; `tool.ts` owns composition, timeout, and retries.
 
 ```ts
 import * as z from "zod/v4";
 
-import { defineTool } from "../utils/define-tool.js";
+import { defineTool } from "../../utils/define-tool.js";
 
-export const helloTool = defineTool((server) =>
+export const hello = defineTool((server) =>
   server.registerTool(
     "hello",
     {
@@ -109,7 +109,8 @@ Then import it in `src/tools/index.ts` and add it to the exported `tools` array.
 ## Code conventions
 
 - Use the terms in `CONTEXT.md`. Update that file only when the meaning of a domain term is settled.
-- Keep one tool per file. Use kebab-case filenames and camelCase MCP tool names.
+- Use kebab-case folder and step filenames and camelCase MCP tool names.
+- Names ending in `Context` return context only. Names ending in `WithContext` return API data with added context. API-only tools keep their ordinary operation names. Use the same name for the exported registration and the MCP tool; do not append `Tool`.
 - Write tool descriptions for the model. State when the tool should be called.
 - Add accurate MCP annotations for read-only, destructive, idempotent, and open-world behavior.
 - Use Zod for input schemas.

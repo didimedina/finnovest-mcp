@@ -60,7 +60,7 @@ const fetchOrders = (portfolioId: string, fromDate: string) =>
     );
   });
 
-export const getOrdersTool = defineTool((server) =>
+export const getOrders = defineTool((server) =>
   server.registerTool(
     "getOrders",
     {

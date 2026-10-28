@@ -60,7 +60,7 @@ const fetchPortfolio = Effect.suspend(() => {
   );
 });
 
-export const getPortfolioTool = defineTool((server) =>
+export const getPortfolio = defineTool((server) =>
   server.registerTool(
     "getPortfolio",
     {

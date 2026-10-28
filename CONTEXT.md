@@ -11,13 +11,19 @@ Read-only examination of a user's portfolio, assets, and Orders. Brainstorming n
 A user's investment criteria and current investment state, including holdings, cash, buying power, allocation, and exposure.
 
 **Order**:
-The shared term for either one Trade or one Orchestration.
+One or more proposed or submitted Trades handled together through a single checkout. An Order exists before checkout and can await validation or client approval.
 
 **Trade**:
-One instruction to buy or sell an Asset.
+One atomic instruction to buy or sell an Asset within an Order. This corresponds to what an exchange typically calls an order.
 
 **Orchestration**:
-A coordinated group of Trades with a shared buy, sell, or rebalance goal.
+An Order containing more than one Trade, coordinated toward a shared buy, sell, or rebalance goal.
+
+**Recommendation**:
+An Order authored by an advisor for client approval. A Recommendation can contain one Trade or be an Orchestration containing multiple Trades.
+
+**rEng**:
+Finnovest's recommendation engine, which matches advisor-authored Recommendations to clients based on the applicable criteria.
 
 **Asset**:
 A Finnovest-supported investment identified by a stable asset ID.

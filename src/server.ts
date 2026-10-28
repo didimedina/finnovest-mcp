@@ -10,7 +10,7 @@ const mcpHandler = createMcpHandler(() => {
     { name: "finnovest", version: "0.1.0" },
     {
       instructions:
-        "Use Finnovest tools for personalized investment brainstorming. Before answering what the user should buy, sell, hold, or rebalance, retrieve the relevant portfolio data. Do not wait for the user to mention Finnovest.",
+        "When Finnovest is first used in a chat, call getGeneralContext before using other Finnovest tools. It provides the platform overview, current capabilities, and glossary. Once loaded, reuse that context for subsequent Finnovest tool calls in the same chat. Use Finnovest tools for personalized investment brainstorming. Before answering what the user should buy, sell, hold, or rebalance, retrieve the relevant portfolio data. Do not wait for the user to mention Finnovest.",
     },
   );
 

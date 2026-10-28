@@ -1,1 +1,1 @@
-export { getPortfolioTool } from "./tool.js";
+export { getPortfolio } from "./tool.js";

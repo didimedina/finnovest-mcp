@@ -1,1 +1,1 @@
-export { getAssetDetailsTool } from "./tool.js";
+export { getAssetDetails } from "./tool.js";

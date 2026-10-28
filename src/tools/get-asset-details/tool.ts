@@ -64,7 +64,7 @@ const fetchAssetDetails = (assetId: string) =>
     );
   });
 
-export const getAssetDetailsTool = defineTool((server) =>
+export const getAssetDetails = defineTool((server) =>
   server.registerTool(
     "getAssetDetails",
     {

@@ -1,1 +1,1 @@
-export { getOrdersTool } from "./tool.js";
+export { getOrders } from "./tool.js";
