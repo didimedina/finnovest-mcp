@@ -1,4 +1,4 @@
-import { Effect, Schedule } from "effect";
+import { Data, Duration, Effect, Schedule } from "effect";
 import * as z from "zod/v4";
 
 import { defineTool } from "../../utils/define-tool.js";
@@ -8,18 +8,57 @@ import { requestOrders } from "./request-orders.js";
 import { requireSuccessfulResponse } from "./require-successful-response.js";
 import { requireValidatedResponse } from "./require-validated-response.js";
 
+class OrdersTimeoutError extends Data.TaggedError("OrdersTimeoutError")<{
+  readonly message: string;
+  readonly retryable: true;
+}> {}
+
 const fetchOrders = (portfolioId: string, fromDate: string) =>
-  requestOrders(portfolioId, fromDate).pipe(
-    Effect.flatMap(requireSuccessfulResponse),
-    Effect.flatMap(parseResponse),
-    Effect.flatMap(requireValidatedResponse),
-    Effect.timeout("5 seconds"),
-    Effect.retry({
-      times: 2,
-      schedule: Schedule.exponential("250 millis"),
-      while: (error) => error._tag === "TimeoutError" || error.retryable,
-    }),
-  );
+  Effect.suspend(() => {
+    // State belongs to this invocation, including concurrent calls to the tool.
+    let attempts = 0;
+    const attempt = Effect.suspend(() => {
+      attempts += 1;
+      return requestOrders(portfolioId, fromDate).pipe(
+        Effect.flatMap(requireSuccessfulResponse),
+        Effect.flatMap(parseResponse),
+        Effect.flatMap(requireValidatedResponse),
+        Effect.timeoutOrElse({
+          duration: "5 seconds",
+          orElse: () =>
+            Effect.fail(
+              new OrdersTimeoutError({ message: "The orders request timed out after 5 seconds.", retryable: true }),
+            ),
+        }),
+      );
+    });
+
+    return attempt.pipe(
+      Effect.retry({
+        times: 2,
+        schedule: Schedule.exponential("250 millis").pipe(
+          Schedule.modifyDelay(({ input, duration }) => {
+            // Never retry sooner than either backoff or the server's requested delay.
+            const delay =
+              typeof input === "object" &&
+              input !== null &&
+              "retryAfterMs" in input &&
+              typeof input.retryAfterMs === "number"
+                ? Duration.max(duration, Duration.millis(input.retryAfterMs))
+                : duration;
+            return Effect.succeed(delay);
+          }),
+        ),
+        while: (error) => error.retryable,
+      }),
+      Effect.mapError((error) => ({
+        ...error,
+        message: error.message,
+        attempts,
+        retriesExhausted: error.retryable && attempts === 3,
+      })),
+    );
+  });
 
 export const getOrdersTool = defineTool((server) =>
   server.registerTool(
