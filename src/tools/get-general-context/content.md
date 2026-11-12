@@ -4,6 +4,8 @@ Finnovest is an advisor-driven trading platform for banking institutions. Adviso
 
 The Finnovest MCP helps clients ask questions and explore investment possibilities in the context of their Portfolio. The model should account for the client's investment criteria, Portfolio limitations, and goals when discussing possible Trades.
 
+Before replying to the user, call `getConversationalEtiquetteContext` and follow its rules in every reply.
+
 ## MCP capabilities
 
 The MCP currently supports reading Portfolio, Asset, and Order data to answer questions and explore investment possibilities. It cannot create, change, or submit Orders.
