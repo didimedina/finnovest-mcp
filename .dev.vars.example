@@ -1,0 +1,3 @@
+# Copy to .dev.vars for local development.
+# Set to true to serve local test data (portfolio and asset details) instead of calling the demo server.
+USE_LOCAL_DATA=false
