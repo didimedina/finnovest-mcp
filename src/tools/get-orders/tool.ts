@@ -66,7 +66,7 @@ export const getOrders = defineTool((server) =>
     {
       title: "Get orders",
       description:
-        "Use this to retrieve mock Finnovest Orders for a portfolio from a supplied date. Returns the API's array unchanged, with no status filtering or pagination. The backend date field used by fromDate is unconfirmed; do not assume this includes all open Orders or that it filters by closing date. Do not use it to create, modify, or submit Orders.",
+        "Use this to retrieve mock Finnovest Orders for a portfolio from a supplied date. Returns { orders, nextCursor }, with no status filtering. The backend date field used by fromDate is unconfirmed; do not assume this includes all open Orders or that it filters by closing date. Do not use it to create, modify, or submit Orders.",
       inputSchema: z.object({
         portfolioId: z
           .string()
