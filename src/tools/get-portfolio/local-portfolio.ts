@@ -13,10 +13,11 @@ const round4 = (value: number) => Math.round(value * 10000) / 10000;
 
 const toIls = (value: number, currency: Currency) => (currency === "USD" ? value * USD_TO_ILS : value);
 
-export const amount = (value: number, nativeCurrency: Currency) =>
-  nativeCurrency === "ILS"
-    ? { inUSD: round2(value / USD_TO_ILS), inILS: round2(value), nativeCurrency }
-    : { inUSD: round2(value), inILS: round2(value * USD_TO_ILS), nativeCurrency };
+// `currency` is the currency `value` is given in; the result carries both conversions.
+export const amount = (value: number, currency: Currency) =>
+  currency === "ILS"
+    ? { inUSD: round2(value / USD_TO_ILS), inILS: round2(value) }
+    : { inUSD: round2(value), inILS: round2(value * USD_TO_ILS) };
 
 const positions = [
   {

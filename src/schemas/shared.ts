@@ -11,4 +11,5 @@ export const assetClass = z.enum(["STOCK", "BOND", "ETF", "MUTUAL_FUND", "OTHER_
 // ISO-8601 UTC, e.g. "2026-11-22T10:31:19Z"
 export const isoDateTime = z.string();
 
-export const currencyAmount = z.looseObject({ inUSD: z.number(), inILS: z.number(), nativeCurrency: currency });
+// A money value in both currencies. Which one is native belongs to the asset (`nativeCurrency`), not to the amount.
+export const currencyAmount = z.looseObject({ inUSD: z.number(), inILS: z.number() });
